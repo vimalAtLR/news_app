@@ -44,21 +44,20 @@ export default class News extends Component {
             },
             {
                 "source": {
-                "id": null,
-                "name": "Forbes"
+                    "id": null,
+                    "name": "9to5Mac"
                 },
-                "author": "Erik Kain",
-                "title": "Here’s The Exact Time ‘Hogwarts Legacy’ Early Access Begins On PS5, Xbox Series X And PC - Forbes",
-                "description": "Here's when you can start playing Hogwarts Legacy early if you pre-ordered the Collector's Edition or the Digital Deluxe Edition.",
-                "url": "https://www.forbes.com/sites/erikkain/2023/02/07/heres-the-exact-time-hogwarts-legacy-early-access-begins-on-ps5-xbox-series-x-and-pc/",
-                "urlToImage": "https://imageio.forbes.com/specials-images/imageserve/63ddbb4d19d9f74be1414400/0x0.jpg?format=jpg&width=1200",
-                "publishedAt": "2023-02-07T05:08:00Z",
-                "content": "Hogwarts Legacy\r\nCredit: Warner Bros\r\nPost updated at 1:30am 2/6/2023. See update below.\r\nThe most highly-anticipated game of 2023 (so far) is almost upon us. Hogwarts Legacy, despite being enmeshed … [+8033 chars]"
+                "author": "Filipe Espósito",
+                "title": "Apple may have overestimated its ability to create a Mac Pro with an Apple Silicon chip",
+                "description": "When Apple announced the transition of Macs powered by Intel processors to its own Apple Silicon in 2020, the company said it would complete the transition of the entire lineup in two years. However, that timeline has passed, and Apple still has one Intel Mac…",
+                "url": "https://9to5mac.com/2023/02/06/apple-may-have-overestimated-its-ability-to-create-a-mac-pro-with-an-apple-silicon-chip/",
+                "urlToImage": "https://i0.wp.com/9to5mac.com/wp-content/uploads/sites/6/2019/12/Mac-Pro-Top-Features-Unwrapped.jpg?resize=1200%2C628&quality=82&strip=all&ssl=1",
+                "publishedAt": "2023-02-07T02:42:22Z",
+                "content": "When Apple announced the transition of Macs powered by Intel processors to its own Apple Silicon in 2020, the company said it would complete the transition of the entire lineup in two years. However,… [+5648 chars]"
             },
     ];
     constructor() {
         super();
-        console.log("this is constructor");
         this.state = {
             articles: this.articles,
             loading: false,
@@ -71,8 +70,8 @@ export default class News extends Component {
             <h3>Top Headlines</h3>
             <div className="row">
                 {this.articles.map((element) => { 
-                    return <div className="col-md-4"  key={element.source.id}>
-                        <NewsItem title={element.title} description={element.description} imgUrl={element.urlToImage} />
+                    return <div className="col-md-4"  key={element.url}>
+                        <NewsItem title={element.title} description={element.description} imgUrl={element.urlToImage} newsUrl={element.url} />
                     </div>
                 })}
             </div>
