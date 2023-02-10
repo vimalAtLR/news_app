@@ -1,81 +1,81 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
+import Spinner from './Spinner';
 
 export default class News extends Component {
-    articles = [
-        {
-            "source": {
-            "id": null,
-            "name": "Gizmodo.com"
-            },
-            "author": "Germain Lussier",
-            "title": "Ant-Man and the Wasp Quantumania First Reactions: MCU Phase 5 - Gizmodo",
-            "description": "The Marvel Studios film starring Paul Rudd, Evangeline Lilly, and Jonathan Majors opens February 17.",
-            "url": "https://gizmodo.com/ant-man-and-wasp-quantumania-reactions-marvel-paul-rudd-1850077940",
-            "urlToImage": "https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_675,pg_1,q_80,w_1200/21d9ccc2912dba6e3d9d228e9069214c.jpg",
-            "publishedAt": "2023-02-07T05:17:00Z",
-            "content": "The Multiverse Saga is about to kick into high gear. Next week, Ant-Man and the Wasp: Quantumania opens in theaters, officially ushering in the beginning of Phase 5 of the Marvel Cinematic Universe. … [+1970 chars]"
-            },
-            {
-            "source": {
-            "id": "politico",
-            "name": "Politico"
-            },
-            "author": null,
-            "title": "Texas attorney accidentally shot by Cheney during 2006 hunting trip dies - POLITICO",
-            "description": "Harry Whittington was sprayed with birdshot pellets to his face, neck and chest by the vice president.",
-            "url": "https://www.politico.com/news/2023/02/07/whittington-dies-cheney-shot-hunting-00081500",
-            "urlToImage": "https://static.politico.com/71/92/1da4b10e42b29afe134373e26f14/obit-harry-whittington-06155.jpg",
-            "publishedAt": "2023-02-07T05:08:20Z",
-            "content": "Rove, an influential Republican strategist and former adviser to former President George W. Bush, said Whittington was a man of enormous integrity and deep compassion who was called on by leaders for… [+2469 chars]"
-            },
-            {
-            "source": {
-            "id": null,
-            "name": "Forbes"
-            },
-            "author": "Erik Kain",
-            "title": "Here’s The Exact Time ‘Hogwarts Legacy’ Early Access Begins On PS5, Xbox Series X And PC - Forbes",
-            "description": "Here's when you can start playing Hogwarts Legacy early if you pre-ordered the Collector's Edition or the Digital Deluxe Edition.",
-            "url": "https://www.forbes.com/sites/erikkain/2023/02/07/heres-the-exact-time-hogwarts-legacy-early-access-begins-on-ps5-xbox-series-x-and-pc/",
-            "urlToImage": "https://imageio.forbes.com/specials-images/imageserve/63ddbb4d19d9f74be1414400/0x0.jpg?format=jpg&width=1200",
-            "publishedAt": "2023-02-07T05:08:00Z",
-            "content": "Hogwarts Legacy\r\nCredit: Warner Bros\r\nPost updated at 1:30am 2/6/2023. See update below.\r\nThe most highly-anticipated game of 2023 (so far) is almost upon us. Hogwarts Legacy, despite being enmeshed … [+8033 chars]"
-            },
-            {
-                "source": {
-                    "id": null,
-                    "name": "9to5Mac"
-                },
-                "author": "Filipe Espósito",
-                "title": "Apple may have overestimated its ability to create a Mac Pro with an Apple Silicon chip",
-                "description": "When Apple announced the transition of Macs powered by Intel processors to its own Apple Silicon in 2020, the company said it would complete the transition of the entire lineup in two years. However, that timeline has passed, and Apple still has one Intel Mac…",
-                "url": "https://9to5mac.com/2023/02/06/apple-may-have-overestimated-its-ability-to-create-a-mac-pro-with-an-apple-silicon-chip/",
-                "urlToImage": "https://i0.wp.com/9to5mac.com/wp-content/uploads/sites/6/2019/12/Mac-Pro-Top-Features-Unwrapped.jpg?resize=1200%2C628&quality=82&strip=all&ssl=1",
-                "publishedAt": "2023-02-07T02:42:22Z",
-                "content": "When Apple announced the transition of Macs powered by Intel processors to its own Apple Silicon in 2020, the company said it would complete the transition of the entire lineup in two years. However,… [+5648 chars]"
-            },
-    ];
     constructor() {
         super();
         this.state = {
-            articles: this.articles,
+            articles: [],
             loading: false,
+            page: 1,
+        }
+    }
+
+    async componentDidMount() {
+        let url = `https://newsapi.org/v2/everything?q=apple&from=2023-02-09&to=2023-02-09&sortBy=popularity&apiKey=4a2aa5480c35478f8dd3895db41782c2&pageSize=${this.props.pageSize?this.props.pageSize:20}`;
+        this.setState({
+            loading: true,
+        })
+        let data = await fetch(url);
+        data = await data.json();
+        this.setState({
+            articles: data.articles,
+            totalResults: data.totalResults,
+            page: 1,
+            loading: false,
+        });
+    }
+
+    handlePrevClick = async () => {
+        console.log("Previous");
+        let url = `https://newsapi.org/v2/everything?q=apple&from=2023-02-09&to=2023-02-09&sortBy=popularity&apiKey=4a2aa5480c35478f8dd3895db41782c2&page=${this.state.page-1}&pageSize=${this.props.pageSize?this.props.pageSize:20}`;
+        this.setState({
+            loading: true,
+        })
+        let data = await fetch(url);
+        data = await data.json();
+        this.setState({
+            page: this.state.page - 1,
+            articles: data.articles,
+            loading: false,
+        });
+    }
+
+    handleNextClick = async () => {
+        console.log("Next");
+        if (!this.state.page + 1 > Math.ceil(this.state.totalResults/20)) {
+            let url = `https://newsapi.org/v2/everything?q=apple&from=2023-02-09&to=2023-02-09&sortBy=popularity&apiKey=4a2aa5480c35478f8dd3895db41782c2&page=${this.state.page+1}&pageSize=${this.props.pageSize?this.props.pageSize:20}`;
+            this.setState({
+                loading: true,
+            })
+            let data = await fetch(url);
+            data = await data.json();
+            this.setState({
+                page: this.state.page + 1,
+                articles: data.articles,
+                loading: false,
+            });
         }
     }
 
     render() {
         return (
-        <div className='container my-3'>
-            <h3>Top Headlines</h3>
-            <div className="row">
-                {this.articles.map((element) => { 
-                    return <div className="col-md-4"  key={element.url}>
-                        <NewsItem title={element.title} description={element.description} imgUrl={element.urlToImage} newsUrl={element.url} />
-                    </div>
-                })}
+            <div className='container my-3'>
+                <h3 className='text-center'>Top Headlines</h3>
+                {this.state.loading && <Spinner />}
+                <div className="row">
+                    {!this.state.loading && this.state.articles?.map((element) => { 
+                        return <div className="col-md-4"  key={element.url}>
+                            <NewsItem title={element.title?element.title:""} description={element.description?element.description:""} imgUrl={element.urlToImage} newsUrl={element.url} />
+                        </div>
+                    })}
+                </div>
+                <div className="container d-flex justify-content-between">
+                    <button type="button" disabled={this.state.page<=1} className="btn btn-primary" onClick={this.handlePrevClick}>&laquo; Previous</button>
+                    <button type="button" disabled={this.state.page + 1 > Math.ceil(this.state.totalResults/this.props.pageSize?this.props.pageSize:20)} className="btn btn-primary" onClick={this.handleNextClick}>Next &raquo;</button>
+                </div>
             </div>
-        </div>
         )
     }
 }
