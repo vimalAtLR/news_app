@@ -14,6 +14,7 @@ export default class News extends Component {
     }
 
     async componentDidMount() {
+        this.props.setProgress(0);
         let url = `https://newsapi.org/v2/everything?q=apple&from=2023-02-09&to=2023-02-09&sortBy=popularity&apiKey=4a2aa5480c35478f8dd3895db41782c2&pageSize=${this.props.pageSize?this.props.pageSize:20}`;
         this.setState({
             loading: true,
@@ -26,22 +27,26 @@ export default class News extends Component {
             page: 1,
             loading: false,
         });
+        this.props.setProgress(100);
     }
 
     fetchMoreData = async () => {
-        console.log("fetch more")
+        this.props.setProgress(10);
         this.setState({page: this.state.page + 1});
         let url = `https://newsapi.org/v2/everything?q=apple&from=2023-02-09&to=2023-02-09&sortBy=popularity&apiKey=4a2aa5480c35478f8dd3895db41782c2&page=${this.state.page+1}&pageSize=${this.props.pageSize?this.props.pageSize:20}`;
         this.setState({
             loading: true,
         })
         let data = await fetch(url);
+        this.props.setProgress(40);
         data = await data.json();
+        this.props.setProgress(70);
         this.setState({
             page: this.state.page - 1,
             articles: this.state.articles.concat(data.articles),
             loading: false,
         });
+        this.props.setProgress(100);
     }
 
     render() {
