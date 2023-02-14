@@ -18,6 +18,7 @@ class App extends Component {
           <NavBar/>
           <Routes>
               <Route exact path="/" element={<News pageSize={6} country='in' category="general" key="general"/>} />
+              <Route exact path="/about" element={<News pageSize={6} country='in' category="about" key="about"/>} />
               <Route exact path="/sport" element={<News pageSize={6} country='in' category="sport" key="sport"/>} />
           </Routes>
         </BrowserRouter>
